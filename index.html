@@ -10,15 +10,22 @@
     const code = urlParams.get('code');
 
     if (code) {
-      // Зберігаємо код авторизації в локальному сховищі або cookie
+      // Зберігаємо код авторизації в локальному сховищі
       localStorage.setItem('discord_code', code);
 
-      // Перенаправляємо користувача на сторінку, де він зможе авторизувати бота
-      window.location.href = '/authorize'; // Замініть /authorize на бажаний URL
+      // Перенаправляємо користувача на сторінку авторизації
+      window.location.href = '/authorize'; // Або інша адреса вашої сторінки авторизації
     } else {
-      // Обробляємо помилку, якщо код авторизації не отримано
-      console.error('Authorization code not found.');
-      document.body.innerHTML = '<h1>Error: Authorization code not found.</h1>';
+      // Перевіряємо, чи користувач вже авторизований (можливо, токен вже є)
+      const token = localStorage.getItem('discord_token');
+      if (token) {
+        // Користувач вже авторизований, перенаправляємо його на головну сторінку або іншу бажану сторінку
+        window.location.href = '/'; // Або інша адреса
+      } else {
+        // Код авторизації не знайдено, і користувач не авторизований
+        console.error('Authorization code not found.');
+        document.body.innerHTML = '<h1>Error: Authorization code not found.</h1><a href="/authorize">Authorize</a>'; // Додаємо посилання на сторінку авторизації
+      }
     }
   </script>
 </body>
