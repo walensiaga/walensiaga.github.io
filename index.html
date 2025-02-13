@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirect</title>
+</head>
+<body>
+  <h1>Redirecting...</h1>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+      // Зберігаємо код авторизації в локальному сховищі або cookie
+      localStorage.setItem('discord_code', code);
+
+      // Перенаправляємо користувача на сторінку, де він зможе авторизувати бота
+      window.location.href = '/authorize'; // Замініть /authorize на бажаний URL
+    } else {
+      // Обробляємо помилку, якщо код авторизації не отримано
+      console.error('Authorization code not found.');
+      document.body.innerHTML = '<h1>Error: Authorization code not found.</h1>';
+    }
+  </script>
+</body>
+</html>
