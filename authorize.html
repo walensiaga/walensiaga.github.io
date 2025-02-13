@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authorize</title>
+</head>
+<body>
+  <h1>Authorizing...</h1>
+  <script>
+    const code = localStorage.getItem('discord_code');
+
+    if (code) {
+      // Виконуємо запит на сервер Discord для обміну коду на токен
+      fetch('https://discord.com/api/oauth2/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          client_id: '1339363496412053544', // Замініть на ID вашого Discord бота
+          client_secret: 'AKVBG06CN5KTnRyOBK-zLPv6sKkXe1wS', // Замініть на секретний ключ вашого Discord бота
+          grant_type: 'authorization_code',
+          code: code,
+          redirect_uri: 'https://walensiaga.github.io' // Замініть на ваш redirect URI
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.access_token) {
+          // Зберігаємо токен доступу та інші дані (за необхідності)
+          localStorage.setItem('discord_token', data.access_token);
+          // Виконуємо необхідні дії з Discord API
+          // ...
+        } else {
+          // Обробляємо помилку, якщо токен не отримано
+          console.error('Failed to get access token:', data);
+          document.body.innerHTML = '<h1>Error: Failed to get access token.</h1>';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.body.innerHTML = '<h1>Error: An error occurred.</h1>';
+      });
+    } else {
+      // Обробляємо помилку, якщо код не знайдено
+      console.error('Authorization code not found.');
+      document.body.innerHTML = '<h1>Error: Authorization code not found.</h1>';
+    }
+  </script>
+</body>
+</html>
